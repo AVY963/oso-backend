@@ -128,10 +128,18 @@ components:
           type: integer
           description: Количество лайков
         createdAt:
+          tags: []string
           type: string
           format: date-time
           description: Время создания поста
-
+        required:
+          - id
+          - nickname
+          - title
+          - content
+          - comments
+          - likes
+          - createAt
     PostInput:
       type: object
       properties:
@@ -141,10 +149,17 @@ components:
         title:
           type: string
           description: Заголовок поста
+        tag:
+          type: string
+          description: Тэг поста
         content:
           type: string
           description: Текст поста
-
+        required: 
+          - nickname
+          - title
+          - tag
+          - content
     Comment:
       type: object
       properties:

@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+  title: Forum API
+  version: 1.0.0
+  description: API для управления постами и комментариями форума
+components:
+  securitySchemes: {}
+security: []
+paths:
+  /posts:
+    get:
+      operationId: GetPostList
+      summary: Получить список всех постов
+      tags: [Posts]
+      responses:
+        200:
+          description: Список постов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    post:
+      operationId: CreatePost
+      summary: Создать новый пост
+      tags: [Posts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostInput'
+      responses:
+        201:
+          description: Пост создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        409: 
+          description: Ошибка проверки на уникальность 
+        422:
+          description: Ошибка валидации 
+
+  /posts/{postId}:
+    get:
+      operationId: GetPostById
+      summary: Получить пост по ID
+      tags: [Posts]
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Пост найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        404:
+          description: Пост не найден
+    put:
+      operationId: UpdatePostById
+      summary: Обновить пост по ID
+      tags: [Posts]
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostInput'
+      responses:
+        200:
+          description: Пост обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        404:
+          description: Пост не найден
+    delete:
+      operationId: DeletePostById
+      summary: Удалить пост по ID
+      tags: [Posts]
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Пост удален
+        404:
+          description: Пост не найден
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор поста
+        nickname:
+          type: string
+          description: Никнейм автора поста
+        title:
+          type: string
+          description: Заголовок поста
+        content:
+          type: string
+          description: Текст поста
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        likes:
+          type: integer
+          description: Количество лайков
+        createdAt:
+          type: string
+          format: date-time
+          description: Время создания поста
+
+    PostInput:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: Никнейм автора поста
+        title:
+          type: string
+          description: Заголовок поста
+        content:
+          type: string
+          description: Текст поста
+
+    Comment:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: Никнейм автора комментария
+        content:
+          type: string
+          description: Текст комментария
+        createdAt:
+          type: string
+          format: date-time
+          description: Время отправки комментария
+        likes:
+          type: integer
+          description: Количество лайков на комментарии

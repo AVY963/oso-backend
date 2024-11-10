@@ -3,8 +3,6 @@ info:
   title: Forum API
   version: 1.0.0
   description: API для управления постами и комментариями форума
-components:
-  securitySchemes: {}
 security: []
 paths:
   /posts:
@@ -128,18 +126,21 @@ components:
           type: integer
           description: Количество лайков
         createdAt:
-          tags: []string
           type: string
           format: date-time
           description: Время создания поста
-        required:
-          - id
-          - nickname
-          - title
-          - content
-          - comments
-          - likes
-          - createAt
+        tags:
+          $ref: '#/components/schemas/Tags'
+
+      required:
+        - id
+        - nickname
+        - title
+        - content
+        - comments
+        - likes
+        - createdAt
+        - tags
     PostInput:
       type: object
       properties:
@@ -149,17 +150,16 @@ components:
         title:
           type: string
           description: Заголовок поста
-        tag:
-          type: string
-          description: Тэг поста
+        tags:
+          $ref: '#/components/schemas/Tags'
         content:
           type: string
           description: Текст поста
-        required: 
-          - nickname
-          - title
-          - tag
-          - content
+      required: 
+        - nickname
+        - title
+        - tags
+        - content
     Comment:
       type: object
       properties:
@@ -176,3 +176,15 @@ components:
         likes:
           type: integer
           description: Количество лайков на комментарии
+      required: 
+        - nickname
+        - content
+        - createdAt
+        - likes
+    Tags:
+      type: array
+      items:
+        type: string
+        example: "work"
+      description: Тэги поста
+    securitySchemes: {}
